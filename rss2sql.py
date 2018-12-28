@@ -106,4 +106,37 @@ class SQL:
 
 
 if __name__ == "__main__":
-    print(__doc__)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-c',
+        dest='config',
+        action='store',
+        default=None,
+        help='Path to configuration file',
+    )
+    parser.add_argument(
+        '-d',
+        dest='uri',
+        action='store',
+        default=None,
+        help='URI of database',
+    )
+    parser.add_argument(
+        '--hide_banner',
+        dest='hide',
+        action='store_const',
+        const=True,
+        default=False,
+    )
+
+    args = parser.parse_args()
+
+    if not args.hide:
+        print(__doc__)
+
+    if args.config is None or args.uri is None:
+        exit(1)
+
+    SQL(args.config, args.uri).fetch()
+    

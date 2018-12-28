@@ -19,7 +19,28 @@ There are three `class` and a configuration file.
 
 ### Configuration File
 
-Thanks to the diversity of RSS feed, it is necessary to configure settings manually. Here is an example:
+Thanks to the diversity of RSS feed, it is necessary to configure settings manually. Here is some examples:
+
+#### Minimal configure
+
+Store nothing but id.
+
+```yaml
+rss:
+  url: "http://songshuhui.net/feed"
+sql:
+  tablename: "songshuhui"
+  field:
+    - name: id
+      val: "x.get('id')"
+      type: VARCHAR
+      type_parameter: 64
+      nullable: false
+      primary_key: true
+      autoincrement: false
+```
+
+#### Common configure
 
 ```yaml
 rss:
@@ -55,12 +76,22 @@ Just remember the **x** in `val` denotes the *dict* instance of an item which pa
 
 ## Usage
 
+### Within code
+
 ```python
 from rss2sql import SQL
 SQL('/path/to/configuration','uri://of:your@own/database').fetch()
+```
+
+### Within commandline
+
+```bash
+python rss2sql.py -c /path/to/configuration -d uri://of:your@own/database --hide_banner
 ```
 
 ## Dependency
 
 - SQLAlchemy and its connector friends (only if you need them)
 - feedparser
+- requests
+- PyYAML
