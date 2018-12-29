@@ -9,7 +9,7 @@ import requests
 import sqlalchemy
 import yaml
 
-LOGGER = logging.getLogger('grs')
+LOGGER = logging.getLogger('rss2sql')
 META = sqlalchemy.MetaData()
 
 
@@ -33,9 +33,9 @@ class RSS:
 
 class SQL:
     def __init__(self, conf, dburi='sqlite:///:memory:', echo_sql=False):
-        self.logger = LOGGER.getChild('GRS')
+        self.logger = LOGGER.getChild('SQL')
         self.config = self.config_parse(conf)
-        if self.config['sql'].get('field',None):
+        if self.config['sql'].get('field', None):
             from sqlalchemy.orm import mapper, sessionmaker
             self.config['sql']['engine'] = sqlalchemy.create_engine(
                 dburi, echo=echo_sql)
@@ -54,14 +54,13 @@ class SQL:
         config = yaml.load(conf)
 
         def field_parse(field_def):
-            val = field_def['val']
-            name = field_def['name']
+            field_type = getattr(sqlalchemy, field_def.get('type', 'TEXT'))
+            parameter = field_def.get('type_parameter', None)
 
-            field_type = field_def.get('type', 'TEXT')
-            field_type_parameter = field_def.get('type_parameter', None)
-            field_type_class = getattr(sqlalchemy, field_type)(
-                field_type_parameter) if field_type_parameter else getattr(
-                    sqlalchemy, field_type)
+            cargs = (
+                field_def['name'],
+                field_type(parameter) if parameter else field_type(),
+            )
 
             kwargs = {
                 'nullable': field_def.get('nullable', True),
@@ -71,16 +70,16 @@ class SQL:
                 'unique': field_def.get('unique', False)
             }
 
-            return ((name, lambda x: eval(val)),
-                    sqlalchemy.Column(name, field_type_class, **kwargs))
+            return (
+                field_def['name'],
+                lambda x: eval(field_def['val']),
+                sqlalchemy.Column(*cargs, **kwargs),
+            )
 
-        columns = [field_parse(f)[1] for f in config['sql'].get('field', [])]
-        config['sql']['table'] = sqlalchemy.Table(config['sql']['tablename'],
-                                                  META, *columns)
-
-        config['rss']['explain'] = [
-            field_parse(f)[0] for f in config['sql'].get('field', [])
-        ]
+        fields = [field_parse(f) for f in config['sql'].get('field', [])]
+        config['rss']['explain'] = [(i[0], i[1]) for i in fields]
+        config['sql']['table'] = sqlalchemy.Table(
+            config['sql']['tablename'], META, *[i[2] for i in fields])
 
         return config
 
@@ -140,13 +139,15 @@ if __name__ == "__main__":
         default=False,
     )
 
+    logging.basicConfig()
+
     args = parser.parse_args()
 
     if not args.hide:
         print(__doc__)
 
     if args.config is not None and args.discover:
-        print('Discover mode activated, ignoring database URI.')
+        LOGGER.warning('Discover mode activated, ignoring database URI.')
         from pprint import pprint
         pprint(SQL(args.config).feeds['entries'][0])
         exit(0)
@@ -155,4 +156,3 @@ if __name__ == "__main__":
         exit(1)
 
     SQL(args.config, args.uri).fetch()
-    
