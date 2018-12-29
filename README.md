@@ -89,6 +89,23 @@ SQL('/path/to/configuration','uri://of:your@own/database').fetch()
 python rss2sql.py -c /path/to/configuration -d uri://of:your@own/database --hide_banner
 ```
 
+### Discover mode
+
+Configuration file is needed, omit the field section, and run
+
+```bash
+python rss2sql.py -c /path/to/configuration  --discover
+```
+
+the configuration file should look like
+
+```yaml
+rss:
+  url: http://songshuhui.net/feed
+sql:
+  tablename: nyaa
+```
+
 ## Dependency
 
 - SQLAlchemy and its connector friends (only if you need them)

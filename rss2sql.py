@@ -35,14 +35,16 @@ class SQL:
     def __init__(self, conf, dburi='sqlite:///:memory:', echo_sql=False):
         self.logger = LOGGER.getChild('GRS')
         self.config = self.config_parse(conf)
-
-        from sqlalchemy.orm import mapper, sessionmaker
-        self.config['sql']['engine'] = sqlalchemy.create_engine(
-            dburi, echo=echo_sql)
-        META.create_all(self.config['sql']['engine'])
-        mapper(RSS, self.config['sql']['table'])
-        Session = sessionmaker(bind=self.config['sql']['engine'])
-        self.session = Session()
+        if self.config['sql'].get('field',None):
+            from sqlalchemy.orm import mapper, sessionmaker
+            self.config['sql']['engine'] = sqlalchemy.create_engine(
+                dburi, echo=echo_sql)
+            META.create_all(self.config['sql']['engine'])
+            mapper(RSS, self.config['sql']['table'])
+            Session = sessionmaker(bind=self.config['sql']['engine'])
+            self.session = Session()
+        else:
+            self.logger.info('sql:field not defined')
 
     def config_parse(self, conf):
         from os.path import isfile
