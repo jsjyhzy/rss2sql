@@ -123,6 +123,14 @@ if __name__ == "__main__":
         help='URI of database',
     )
     parser.add_argument(
+        '--discover',
+        dest='discover',
+        action='store_const',
+        const=True,
+        default=False,
+        help='Discover the RSS feed entry struct',
+    )
+    parser.add_argument(
         '--hide_banner',
         dest='hide',
         action='store_const',
@@ -134,6 +142,12 @@ if __name__ == "__main__":
 
     if not args.hide:
         print(__doc__)
+
+    if args.config is not None and args.discover:
+        print('Discover mode activated, ignoring database URI.')
+        from pprint import pprint
+        pprint(SQL(args.config).feeds['entries'][0])
+        exit(0)
 
     if args.config is None or args.uri is None:
         exit(1)
