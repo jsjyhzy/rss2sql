@@ -40,6 +40,37 @@ sql:
       autoincrement: false
 ```
 
+#### Using built-in reference table type instead of `ENUM` type
+
+Using `REFTABLE` instead of `ENUM`, then it will define a reference table with
+field `id` as primary key and the field you named. 
+
+For example:
+
+```yaml
+rss:
+  url: https://nyaa.si/?page=rss
+sql:
+  tablename: nyaa
+  field:
+    - name: id
+      val: "x.get('id')"
+      type: VARCHAR
+      type_parameter: 256
+      nullable: false
+      primary_key: true
+      autoincrement: false
+    - name: cate
+      val: "x.get('nyaa_category')"
+      type: REFTABLE
+      type_parameter:
+        - VARCHAR
+        - 20
+```
+
+It will create a reference table with field `id` and `cate`,
+and in table `nyaa` the `cate` field is a `INT` type.
+
 #### Common configure
 
 ```yaml
