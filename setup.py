@@ -5,7 +5,7 @@ with open('README.md') as fp:
 
 setup(
     name='rss2sql',
-    version='1.0.0',
+    version='1.0.1',
     description='Convert RSS feed to SQL database',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -26,10 +26,10 @@ setup(
         "SQLAlchemy>=1.2.10",
         "feedparser>=5.2.1",
     ],
-    py_modules=['__init__', 'rss2sql'],
+    packages=['rss2sql'],
     entry_points={
         'console_scripts': [
-            'rss2sql=rss2sql:entrypoint',
+            'rss2sql=rss2sql.rss2sql:entrypoint',
         ],
     },
 )

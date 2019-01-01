@@ -5,15 +5,11 @@ View [docs](https://jsjyhzy.github.io/rss2sql/) for specification
 
 ## Installation
 
-For now, download the zip acharive and install dependencies.
-In the future, `pip install` maybe.
+```bash
+pip install rss2sql
+```
 
-### Dependency
-
-- `SQLAlchemy` and its connector friends (only if you need them)
-- `feedparser`
-- `requests`
-- `PyYAML`
+**Attention:** connector friends of `SQLAlchemy` need to be installed manually.
 
 ## Usage
 
