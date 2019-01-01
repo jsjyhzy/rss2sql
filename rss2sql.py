@@ -185,8 +185,7 @@ class SQL:
                     }))
         self.commit()
 
-
-if __name__ == "__main__":
+def entrypoint():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -236,3 +235,6 @@ if __name__ == "__main__":
         exit(1)
 
     SQL(args.config, args.uri).fetch()
+
+if __name__ == "__main__":
+    entrypoint()
