@@ -1,6 +1,24 @@
-# RSS to SQL
+# Introduction
 
-Preserving your subscribed RSS feeds into a relational database.
+This is the document of `rss2sql`
+
+<!-- TOC depthFrom:2 -->
+
+- [Specification](#specification)
+    - [Classes](#classes)
+        - [ToolKit](#toolkit)
+        - [RSS](#rss)
+        - [SQL](#sql)
+    - [Configuration File](#configuration-file)
+        - [Minimal configure](#minimal-configure)
+        - [Using built-in reference table type instead of `ENUM` type](#using-built-in-reference-table-type-instead-of-enum-type)
+        - [Common configure](#common-configure)
+- [Usage](#usage)
+    - [Within code](#within-code)
+    - [Within commandline](#within-commandline)
+    - [Discover mode](#discover-mode)
+
+<!-- /TOC -->
 
 ## Specification
 
@@ -8,14 +26,17 @@ There are three `class` and a configuration file.
 
 ### Classes
 
-1. *Class* ToolKit
-    - This class define some useful static method to handle parsed feed
+#### ToolKit
 
-2. *Class* RSS
-    - Just a representation of a single RSS feed item.
+This class define some useful static method to handle parsed feed
 
-3. *Class* SQL
-    - Creating table according to configuration file, call its **fetch** method to store data after that table created scuessfully.
+#### RSS
+
+Just a representation of a single RSS feed item.
+
+#### SQL
+
+Creating table according to configuration file, call its **fetch** method to store data after that table created scuessfully.
 
 ### Configuration File
 
@@ -136,10 +157,3 @@ rss:
 sql:
   tablename: nyaa
 ```
-
-## Dependency
-
-- SQLAlchemy and its connector friends (only if you need them)
-- feedparser
-- requests
-- PyYAML
