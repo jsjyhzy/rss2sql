@@ -20,6 +20,22 @@ class ToolKit:
         from time import mktime
         return datetime.fromtimestamp(mktime(st))
 
+    @staticmethod
+    def IEC_prefix_To_Bytes(string):
+        '''
+        Convert `1 KiB` to `1024`
+        '''
+        content = string.split(' ')
+        value, level = content[0], content[-1]
+        power = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB',
+                 'YiB'].index(level)
+        return float(value)*1024**power
+
+    @staticmethod
+    def Hexstring_To_Bytes(string):
+        from binascii import unhexlify
+        return unhexlify(string)
+
 
 class RSS:
     def __init__(self, *args, **kwargs):
