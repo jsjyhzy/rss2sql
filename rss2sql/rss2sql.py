@@ -183,7 +183,7 @@ class SQL:
                         name: func(feed)
                         for name, func in self.config['rss']['explain']
                     }))
-        self.commit()
+            self.commit()
 
 def entrypoint():
     import argparse
