@@ -5,7 +5,7 @@ with open('README.md') as fp:
 
 setup(
     name='rss2sql',
-    version='1.0.2',
+    version='1.0.3',
     description='Convert RSS feed to SQL database',
     long_description=long_description,
     long_description_content_type='text/markdown',
