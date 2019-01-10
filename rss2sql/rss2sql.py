@@ -96,7 +96,7 @@ class SQL:
         req_type = field_def.get('type', 'TEXT')
         params = field_def.get('type_parameter', None)
         if req_type.upper() == 'REFTABLE':
-            ref_tablename = '%s_REF_%s' % (self.tablename, field_def['name'])
+            ref_tablename = '%s_ref_%s' % (self.tablename, field_def['name'])
             req_ref_type = params[0] if isinstance(params, list) else params
             ref_params = params[1] if isinstance(params, list) else None
             sql_type = self._request_sql_type(req_ref_type)
