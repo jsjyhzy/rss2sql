@@ -82,6 +82,10 @@ class SQL:
     def commit(self, *args, **kwargs):
         return self._session.commit(*args, **kwargs)
 
+    def quit(self, *args, **kwargs):
+        self.commit()
+        return self._session.close(*args, **kwargs)
+
     def _request_sql_type(self, sql_type):
         ret = getattr(sqlalchemy, sql_type, None)
 
