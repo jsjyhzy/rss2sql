@@ -12,7 +12,6 @@ import yaml
 LOGGER = logging.getLogger('rss2sql')
 META = sqlalchemy.MetaData()
 
-
 class ToolKit:
     @staticmethod
     def struct_time_To_datetime(st):
@@ -56,7 +55,7 @@ class SQL:
         if isinstance(conf, str) and isfile(conf):
             with open(conf) as fp:
                 conf = fp.read()
-        self.config = yaml.load(conf)
+        self.config = yaml.full_load(conf)
         self.config_parse()
         if self.config['sql'].get('field', None):
             from sqlalchemy.orm import mapper, sessionmaker
@@ -82,6 +81,10 @@ class SQL:
 
     def commit(self, *args, **kwargs):
         return self._session.commit(*args, **kwargs)
+
+    def quit(self, *args, **kwargs):
+        self.commit()
+        return self._session.close(*args, **kwargs)
 
     def _request_sql_type(self, sql_type):
         ret = getattr(sqlalchemy, sql_type, None)
